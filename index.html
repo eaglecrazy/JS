@@ -10,36 +10,12 @@
 </head>
 
 <body>
-    <header>
+    <header class="header">
         <button class="button">Корзина</button>
-    </header>
-    <main>
+    </header >
+    <main class="main">
         <div class="goods-list"></div>
         <hr>
-        <div class="text">
-            <pre>
-            КОММЕНТАРИЙ К ДОМАШНЕМУ ЗАДАНИЮ.
-            
-            Запятые в разметке появлялись из за того, что в document.querySelector('.goods-list').innerHTML передавался массив, а не строка текста. Он был преобразован в текст, и элементы были разделены запятыми.
-
-            ВОПРОСЫ:
-            
-            1. Вопрос по прошлому вебинару. Когда Вы рассказывали про функцию map, то в редакторе кода после аргументов были написаны типы данных. Выглядело это таким образом
-
-            var arr = [1,2].map((value:string, index :nubmer) => {
-
-            Насколько я понимаю ":string" и ":nubmer" добавляла IDE и на самом деле в коде их нет?
-
-            2. Как мне сказать eslint и jslint что я использую ES6 ?
-            Они выводят такие ошибки:
-            eslint: "Expected an identifier and instead saw 'const'"
-            jslint: "Parsing error: The keyword 'const' is reserved"
-            
-            Наверняка нужно в начала кода написать директиву типа таких:
-            /* jslint white: true */
-            /* eslint-env browser */
-            Только вот какие? Нагуглить не получилось. Помогите, пожалуйста.</pre>
-        </div>
     </main>
 </body>
 

@@ -1,15 +1,17 @@
 html,
 body {
     height: 100%;
-    background: bisque;
+    background: #fff;
+    font-family: "Arial MT";
 }
 
-header {
+.header {
     min-height: 40px;
     padding: 10px 20px;
+    background-color: #f2f2f2;
 }
 
-header .button {
+.header .button {
     float: right;
     width: 120px;
 }
@@ -19,15 +21,32 @@ header .button {
     width: 250px;
     font-weight: 700;
     font-size: 20px;
-    color: rgba(95, 52, 0, 0.81);
     cursor: pointer;
+    background-color: rgb(69, 69, 69);
+    border: none;
+    border-radius 3px;
+    color: white;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 1px;
+    transition: 0.2s;
 }
 
-main {
+.button:hover {
+    outline: none;
+    background-color: rgb(69, 69, 69, .8);
+
+}
+
+.button:active {
+    outline: none;
+    background-color: rgb(69, 69, 69);
+}
+
+.main {
     padding: 20px;
-    border-top: solid 2px rgba(95, 52, 0, 0.81);
-    border-bottom: solid 2px rgba(95, 52, 0, 0.81);
-/*    min-height: 100%;*/
+    border-top: solid 2px rgb(69, 69, 69);;
+    border-bottom: solid 2px rgb(69, 69, 69);;
 }
 
 .goods-list {
@@ -37,23 +56,23 @@ main {
 }
 
 .goods-item {
-    border: solid 2px rgba(95, 52, 0, 0.2);
+    background-color: #f2f2f2;
+    border: 1px solid #d8d8d8;
     border-radius: 3px;
     min-height: 250px;
-    min-width: 20%;
+    width: 250px;
     text-align: center;
     padding: 20px;
     margin: 15px 25px;
-    
 }
 
-.goods-item h3 {
+.goods-item-heading {
     font-weight: 700;
     font-size: 40px;
-    color: rgba(95, 52, 0, 0.81);
+    color: rgb(35, 35, 35);
 }
 
-.goods-item p {
+.goods-item-text {
     font-size: 22px;
     margin-bottom: 15px;
 }
@@ -62,10 +81,4 @@ main {
     border-radius: 3px;
     display: inline-block;
     margin: 15px 0;
-}
-
-pre {
-    font-size: 25px;
-    white-space:pre-wrap; 
-    
 }
