@@ -30,6 +30,7 @@ body {
     text-decoration: none;
     border-radius: 1px;
     transition: 0.2s;
+     outline: none;
 }
 
 .button:hover {
