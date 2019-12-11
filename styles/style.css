@@ -2,7 +2,7 @@ html,
 body {
     height: 100%;
     background: #fff;
-    font-family: "Arial MT";
+    font-family: "Arial MT", sans-serif;
 }
 
 .header {
@@ -22,15 +22,15 @@ body {
     font-weight: 700;
     font-size: 20px;
     cursor: pointer;
-    background-color: rgb(69, 69, 69);
+    background-color: #333333;
     border: none;
     border-radius 3px;
     color: white;
     font-weight: 700;
     text-decoration: none;
-    border-radius: 1px;
+    border-radius: 4px;
     transition: 0.2s;
-     outline: none;
+    outline: none;
 }
 
 .button:hover {
@@ -41,13 +41,13 @@ body {
 
 .button:active {
     outline: none;
-    background-color: rgb(69, 69, 69);
+    background-color: #333333;
 }
 
 .main {
     padding: 20px;
-    border-top: solid 2px rgb(69, 69, 69);;
-    border-bottom: solid 2px rgb(69, 69, 69);;
+    border-top: solid 2px #333333;;
+    border-bottom: solid 2px #333333;;
 }
 
 .goods-list {
@@ -70,7 +70,7 @@ body {
 .goods-item-heading {
     font-weight: 700;
     font-size: 40px;
-    color: rgb(35, 35, 35);
+    color: #333333;
 }
 
 .goods-item-text {
