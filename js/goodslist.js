@@ -15,15 +15,15 @@ class GoodsItem {
                     <h3 class="goods-item-heading">${this.title}</h3>
                     <img class="item-image" src="img/game.jpg" width="250" height="156" alt="${this.title}">
                     <p class="goods-item-text">Цена: ${this.price} рублей</p>
-                    <button class="button">Добавить в корзину</button>
+                    <button class="button" id="${this.title}">Добавить в корзину</button>
                 </div>`;
     }
 }
 
 class GoodsList {
-    
+
     constructor() {
-        this.url  = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
+        this.url = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
         this.goods = [];
     }
 
@@ -65,9 +65,9 @@ class GoodsList {
         //        }];
         let promice = this.makeGetRequest(`${this.url}/catalogData.json`);
         promice.then((goods) => {
-            this.goods = goods;
-            console.log('FETCH');
-            console.log(this.goods);
+            this.goods = goods.map(item => {
+                return new GoodsItem(item.product_name, item.price);
+            });
             this.render();
         }).catch((error) => {
             console.log(error);
@@ -75,14 +75,31 @@ class GoodsList {
     }
 
     render() {
-        let listHtml = '';
+        let listHtml = '<div class="goods-list">';
         this.goods.forEach(good => {
-            const goodItem = new GoodsItem(good.product_name, good.price);
-            listHtml += goodItem.render();
+            listHtml += good.render();
         });
-        document.querySelector('.goods-list').innerHTML = listHtml;
+        document.querySelector('.main').innerHTML = listHtml + '</div>';
+        this.addEvents();
+    }
+
+    addEvents() {
+        let buttons = document.querySelectorAll('.goods-list .button');
+        buttons.forEach(button => {
+            button.onclick = this.goodItemButtonClick;
+        });
+    }
+
+    goodItemButtonClick(ewt) {
+        /*************************************************/
+        найти способ тут
+        сделать добавление в корзине пи клике +1, а не нового товара
+        let thisGood = l.goods.find((good) => {
+            if (ewt.target.id === good.title) {
+                return good;
+            }
+        });
+        cart.addItem(thisGood);
+        console.log(cart.cart);
     }
 }
-
-const l = new GoodsList();
-//l.fetchGoods();

@@ -75,27 +75,3 @@ class Cart {
         document.querySelector('main').innerHTML = listHtmlStart + listHtmlMiddle + listHtmlEnd;
     }
 }
-
-const cart = new Cart();
-
-
-
-let a = new CartItem({
-    title: 'Mario',
-    price: 150
-});
-let b = new CartItem({
-    title: 'Castlevania',
-    price: 200
-});
-let c = new CartItem({
-    title: 'Battletoads',
-    price: 180
-});
-
-cart.addItem(a);
-cart.addItem(a);
-cart.addItem(b);
-cart.addItem(c);
-
-cart.render();

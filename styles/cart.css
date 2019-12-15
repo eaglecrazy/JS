@@ -7,16 +7,17 @@
 
 .cart-items {
     background-color: #d8d8d8;
-    width: 70%;
     min-width: 800px;
+    width: 100%;
     border-radius: 10px;
 }
 
 .cart-info {
     background: #ddc4ff;
-    min-width: 350px;
+    min-width: 380px;
+    max-width: 380px;
+    width: 380px;
     min-height: 186px;
-    width: 30%;
     box-sizing: border-box;
     margin: 0 10px;
     border-radius: 10px;
