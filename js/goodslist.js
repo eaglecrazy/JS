@@ -1,6 +1,3 @@
-
-
-
 class GoodsItem {
     constructor(title = 'Без имени', price = 0) {
         this.title = title;
@@ -46,29 +43,19 @@ class GoodsList {
     }
 
     fetchGoods() {
-        //        this.goods = [{
-        //            title: 'Mario',
-        //            price: 150
-        //        }, {
-        //            title: 'Castlevania',
-        //            price: 200
-        //        }, {
-        //            title: 'Battletoads',
-        //            price: 180
-        //        }, {
-        //            title: 'Contra',
-        //            price: 140
-        //        }];
-        let promice = this.makeGetRequest(`${this.url}/catalogData.json`);
-        promice.then((goods) => {
-            this.goods = goods.map(item => {
-                return new GoodsItem(item.product_name, item.price);
+        return new Promise((resolve, reject) => {
+            let promice = this.makeGetRequest(`${this.url}/catalogData.json`);
+            promice.then((goods) => {
+                this.goods = goods.map(item => {
+                    return new GoodsItem(item.product_name, item.price);
+                });
+                resolve();
+            }).catch((error) => {
+                reject('fetchGoods error');
             });
-            this.render();
-        }).catch((error) => {
-            console.log(error);
         });
     }
+
 
     render() {
         let listHtml = '<div class="goods-list">';
@@ -78,10 +65,15 @@ class GoodsList {
         document.querySelector('.main').innerHTML = listHtml + '</div>';
         this.addEvents();
     }
-    
-    erase() {
-        const root = document.querySelector('.goods-list');
-        root.parentElement.removeChild(root);
+
+    fillList() {
+        let promice = this.fetchGoods();
+        promice.then(() => {
+            this.render();
+        }).catch((error) => {
+            console.log('fillList error');
+        });
+
     }
 
     addEvents() {
@@ -97,11 +89,27 @@ class GoodsList {
                 cart.addItem(thisGood);
             });
         });
-        
-        const cartButton = document.querySelector('.cartButton');
-        cartButton.addEventListener('click', () => {
-            me.erase();
-            cart.render();
-        });
     }
 }
+
+
+
+
+
+
+
+
+
+//        this.goods = [{
+//            title: 'Mario',
+//            price: 150
+//        }, {
+//            title: 'Castlevania',
+//            price: 200
+//        }, {
+//            title: 'Battletoads',
+//            price: 180
+//        }, {
+//            title: 'Contra',
+//            price: 140
+//        }];

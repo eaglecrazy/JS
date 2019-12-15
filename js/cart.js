@@ -30,7 +30,6 @@ class CartItem {
 class Cart {
     constructor() {
         this.cart = [];
-        this.rendered = false;
     }
 
     addItem(item) {
@@ -46,8 +45,6 @@ class Cart {
         } else {
             exists.quantity++;
         }
-
-        console.log(cart.cart);
     }
 
     removeItem(itemTitle) {
@@ -85,9 +82,6 @@ class Cart {
     }
 
     render() {
-        if (this.rendered) {
-            return;
-        }
         const listHtmlStart =
             `<div class="cart-wrapper">
                 <div class="cart-items">`;

@@ -9,13 +9,23 @@ chat.addMessage(new Message('Хорошо.', new Date, admin));
 const cart = new Cart();
 
 //ТОВАРЫ
-const l = new GoodsList();
-l.fetchGoods();
+const goods = new GoodsList();
+goods.fillList();
 
+//очистка мейна
+const erase = function() {
+    const root = document.querySelector('.main');
+    root.innerHTML = '';
+}
 
-//сделать
-//1. Переделайте makeGETRequest() так, чтобы она использовала промисы.
-//2. Добавьте в соответствующие классы методы добавления товара в корзину, 
-//удаления товара из корзины и получения списка товаров корзины.
-//3* Переделайте GoodsList так, чтобы fetchGoods() возвращал промис, 
-//а render() вызывался в обработчике этого промиса.
+//события кнопок в хидере
+const cartButton = document.querySelector('.cartButton');
+cartButton.addEventListener('click', () => {
+    erase();
+    cart.render();
+});
+const indexButton = document.querySelector('.indexButton');
+indexButton.addEventListener('click', () => {
+    erase();
+    goods.render();
+});

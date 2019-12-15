@@ -9,10 +9,11 @@ body {
     min-height: 40px;
     padding: 10px 20px;
     background-color: #f2f2f2;
+    display: flex;
+    justify-content: space-between;
 }
 
 .header .button {
-    float: right;
     width: 120px;
 }
 
