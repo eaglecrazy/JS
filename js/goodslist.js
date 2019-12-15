@@ -1,8 +1,4 @@
-//1. Переделайте makeGETRequest() так, чтобы она использовала промисы.
-//2. Добавьте в соответствующие классы методы добавления товара в корзину, 
-//удаления товара из корзины и получения списка товаров корзины.
-//3* Переделайте GoodsList так, чтобы fetchGoods() возвращал промис, 
-//а render() вызывался в обработчике этого промиса.
+
 
 
 class GoodsItem {
@@ -82,24 +78,30 @@ class GoodsList {
         document.querySelector('.main').innerHTML = listHtml + '</div>';
         this.addEvents();
     }
-
-    addEvents() {
-        let buttons = document.querySelectorAll('.goods-list .button');
-        buttons.forEach(button => {
-            button.onclick = this.goodItemButtonClick;
-        });
+    
+    erase() {
+        const root = document.querySelector('.goods-list');
+        root.parentElement.removeChild(root);
     }
 
-    goodItemButtonClick(ewt) {
-        /*************************************************/
-        найти способ тут
-        сделать добавление в корзине пи клике +1, а не нового товара
-        let thisGood = l.goods.find((good) => {
-            if (ewt.target.id === good.title) {
-                return good;
-            }
+    addEvents() {
+        const buttons = document.querySelectorAll('.goods-list .button');
+        const me = this;
+        buttons.forEach(button => {
+            button.addEventListener('click', (ewt) => {
+                let thisGood = me.goods.find((good) => {
+                    if (ewt.target.id === good.title) {
+                        return good;
+                    }
+                });
+                cart.addItem(thisGood);
+            });
         });
-        cart.addItem(thisGood);
-        console.log(cart.cart);
+        
+        const cartButton = document.querySelector('.cartButton');
+        cartButton.addEventListener('click', () => {
+            me.erase();
+            cart.render();
+        });
     }
 }
