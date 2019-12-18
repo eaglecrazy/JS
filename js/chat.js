@@ -95,17 +95,16 @@ class Chat {
 
     crossClick(ewt) {
         ewt.stopPropagation(); //прекращаем обработку события иначе будет ещё один клик на хидер
-        //Как тут обратиться к самому объекту? this указывает на объект события
         chat.changeState();
     }
 
     headerClick() {
         if (!chat.max) {
-            //Как тут обратиться к самому объекту? this указывает на объект события
             chat.changeState();
         }
     }
 
+    //это я исправлю
     changeState() {
         this.content.classList.toggle('displayNone');
         this.form.classList.toggle('displayNone');

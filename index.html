@@ -7,18 +7,35 @@
     <link rel="stylesheet" href="styles/style.css">
     <link rel="stylesheet" href="styles/chat.css">
     <link rel="stylesheet" href="styles/cart.css">
+    <link rel="stylesheet" href="styles/form.css">
     <script defer src="js/goodslist.js"></script>
     <script defer src="js/chat.js"></script>
     <script defer src="js/cart.js"></script>
+    <script defer src="js/form.js"></script>
     <script defer src="js/main.js"></script>
     <title>eShop</title>
 </head>
 
 <body>
     <header class="header">
-        <button class="button indexButton">Магазин</button>
+        <div class="menu">
+            <button class="button indexButton">Магазин</button>
+            <button class="button formButton">Обратная связь</button>
+        </div>
         <button class="button cartButton">Корзина</button>
     </header>
     <main class="main">
+    
+    <div class="form-wrap">
+            <form action="#" class="form">
+                <label for="input-name" class="form-label">Ваше имя:</label><input class="form-input" type="text" id="input-name" name="login" placeholder="Имя">
+                <label for="input-phone" class="form-label">Ваш телефон:</label><input class="form-input" type="text" id="input-phone" name="phone" placeholder="+7(123)456-7890">
+                <label for="input-email" class="form-label">Ваш e-mail:</label><input class="form-input" type="email" id="input-email" name="email"  placeholder="test@test.com">
+                <label for="input-text" class="form-label">Ваш отзыв:</label>
+                <textarea id="input-text" class="form-input form-textarea"></textarea>
+                <input type="submit" class="button form-button" value="Отправить">
+            </form>
+        </div>
+    
     </main>
 </body></html>
