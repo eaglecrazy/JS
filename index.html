@@ -18,24 +18,30 @@
 
 <body>
     <header class="header">
-        <div class="menu">
+        <div class="menuLeft">
             <button class="button indexButton">Магазин</button>
             <button class="button formButton">Обратная связь</button>
         </div>
-        <button class="button cartButton">Корзина</button>
+        <div class="menuRight">
+            <form class="searchForm">
+                <input type="text" class="searchInput form-input" placeholder="">
+                <button class="button searchButton">Поиск</button>
+            </form>
+            <button class="button cartButton">Корзина</button>
+        </div>
     </header>
     <main class="main">
-    
-    <div class="form-wrap">
+
+        <div class="form-wrap">
             <form action="#" class="form">
                 <label for="input-name" class="form-label">Ваше имя:</label><input class="form-input" type="text" id="input-name" name="login" placeholder="Имя">
                 <label for="input-phone" class="form-label">Ваш телефон:</label><input class="form-input" type="text" id="input-phone" name="phone" placeholder="+7(123)456-7890">
-                <label for="input-email" class="form-label">Ваш e-mail:</label><input class="form-input" type="email" id="input-email" name="email"  placeholder="test@test.com">
+                <label for="input-email" class="form-label">Ваш e-mail:</label><input class="form-input" type="email" id="input-email" name="email" placeholder="test@test.com">
                 <label for="input-text" class="form-label">Ваш отзыв:</label>
                 <textarea id="input-text" class="form-input form-textarea"></textarea>
                 <input type="submit" class="button form-button" value="Отправить">
             </form>
         </div>
-    
+
     </main>
 </body></html>

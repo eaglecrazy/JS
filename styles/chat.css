@@ -22,18 +22,6 @@
     position: relative;
 }
 
-.chatHeaderMax {
-    padding: 15px 10px 10px 80px;
-}
-
-.chatHeaderMin {
-    padding: 10px;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 40px;
-}
 
 .chatAvatar {
     position: absolute;
@@ -44,7 +32,7 @@
 }
 
 .chatInfo {
-    display: block;
+    display: none;
     color: #f2f2f2;
     font-size: 18px;
 }
@@ -189,6 +177,29 @@
     left: 295px;
 }
 
+
+.chatCollapsed .chatHeader{
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+}
+
+.chatCollapsed .chatInfo{
+    display: block;
+}
+
+.chatCollapsed .chatCross,
+.chatCollapsed .chatAvatar,
+.chatCollapsed .chatName,
+.chatCollapsed .chatWorker,
+.chatCollapsed .chatContent,
+.chatCollapsed .chatForm
+{
+    display: none;
+}
 
 /*
 .colors {

@@ -103,30 +103,31 @@ class Cart {
 
     addEvents() {
         const me = this;
-        
-        cart.cart.forEach(item => {
+
+        me.cart.forEach(item => {
             //клик на крестик
             const cross = document.querySelector(`#${item.title}-cross`);
             cross.addEventListener('click', () => {
-                item.erase(cross);    
-                cart.cart.splice(cart.cart.indexOf(item), 1);
+                item.erase(cross);
+                me.cart.splice(me.cart.indexOf(item), 1);
                 this.refreshInfo();
             });
-            
+
             //изменение инпута
             const input = document.querySelector(`#${item.title}-input`);
             input.addEventListener('change', () => {
                 const val = parseInt(input.value);
-                if(val <= 0){
+                if (val <= 0) {
                     val = 1;
                     input.value = '1';
                 }
-                
+
                 item.quantity = val;
                 this.refreshInfo();
             });
         });
     }
+    
     
     refreshInfo() {
         const quantity = document.querySelector('.cart-info-quantity ');

@@ -26,11 +26,13 @@ class Form {
 
     checkAllInputs() {
         this.checkInput('#input-name', '^[A-Za-zА-Яа-яЁё]+$');
+        
         //Очень долго я просидел с этим выражением. На сайте https://regex101.com/ это вырожение вполне валидное и находит такую строку +7(123)456-7890. А броузер выбрасывает ошибку: 
         //SyntaxError: Invalid regular expression: /^+7(d{3})d{3}-d{4}/: Nothing to repeat
         //Поэтому я оставлю его закомментированным
-        this.checkInput('#input-phone', `^\+7\(\d{3}\)\d{3}\-\d{4}$`);
-        this.checkInput('#input-email', '^[a-z]{1}[a-z.-]+[a-z]{1}@[a-z]+\.[a-z]+$');
+        //this.checkInput('#input-phone', `^\+7\(\d{3}\)\d{3}\-\d{4}$`);
+        
+        this.checkInput('#input-email', '^[a-z0-9]*[a-z0-9.-]*[a-z0-9]*@[a-z]+\.[a-z]+$');
     }
 
     checkInput(selector, regExpStr) {
