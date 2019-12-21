@@ -14,7 +14,7 @@ class GoodsItem {
 }
 
 class GoodsList {
-
+    
     constructor() {
         this.url = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
         this.goods = [];
@@ -77,7 +77,6 @@ class GoodsList {
         this.render();
     }
 
-
     render() {
         let listHtml = '<div class="goods-list">';
         this.filteredGoods.forEach(good => {
@@ -111,9 +110,6 @@ class GoodsList {
         });
     }
 }
-
-
-
 
 
 
