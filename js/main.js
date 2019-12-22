@@ -54,7 +54,6 @@ searchForm.addEventListener('submit', (evt) => {
 });
 */
 
-
 /*1. Добавить методы и обработчики событий для поля поиска. Создать в объекте данных поле searchLine и привязать к нему содержимое поля ввода. На кнопку «Искать» добавить обработчик клика, вызывающий метод FilterGoods.
 2. Добавить корзину. В html-шаблон добавить разметку корзины. Добавить в объект данных поле isVisibleCart, управляющее видимостью корзины.
 3. *Добавлять в .goods-list заглушку с текстом «Нет данных» в случае, если список товаров пуст.*/
@@ -70,9 +69,10 @@ const app = new Vue({
         searchLine: '',
 
         isVisibleCart: false,
-        cart: []
-        //        cartTotalQuantity: 0,
-        //        cartTotalPrice: 0
+        cart: [],
+        
+        fetchError: false,
+        searchNone: false
     },
     methods: {
         //header
@@ -126,6 +126,7 @@ const app = new Vue({
                 });
             }).catch((error) => {
                 console.log('fetchGoods error');
+                this.fetchError = true;
             });
         },
         filter(searchText, allItems) {
@@ -139,6 +140,11 @@ const app = new Vue({
                 this.filteredGoods = this.goods.filter((good) => {
                     return regexp.test(good.title);
                 });
+            }
+            if(this.filteredGoods.length === 0){
+                this.searchNone = true;
+            } else {
+                this.searchNone = false;
             }
         },
         productButtonClick(ewt) {

@@ -18,7 +18,7 @@ body {
     margin-bottom: 10px;
 }
 
-.header .menu .button{
+.header .menu .button {
     margin-right: 10px;
 }
 
@@ -52,8 +52,10 @@ body {
 
 .main {
     padding: 20px;
-    border-top: solid 2px #333333;;
-    border-bottom: solid 2px #333333;;
+    border-top: solid 2px #333333;
+    ;
+    border-bottom: solid 2px #333333;
+    ;
 }
 
 .goods-list {
@@ -97,7 +99,11 @@ body {
 }
 
 
-
+.goods-list-info {
+    font-weight: 700;
+    font-size: 30px;
+    color: #333333;
+}
 
 
 .searchForm {
