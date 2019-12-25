@@ -14,10 +14,11 @@ class GoodsItem {
 }
 
 class GoodsList {
-
+    
     constructor() {
         this.url = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
         this.goods = [];
+        this.filteredGoods = [];
     }
 
     makeGetRequest(url) {
@@ -45,10 +46,15 @@ class GoodsList {
     fetchGoods() {
         return new Promise((resolve, reject) => {
             let promice = this.makeGetRequest(`${this.url}/catalogData.json`);
-            promice.then((goods) => {
-                this.goods = goods.map(item => {
+            promice.then((newGoods) => {
+                this.goods = newGoods.map(item => {
                     return new GoodsItem(item.product_name, item.price);
                 });
+
+                this.goods.forEach(item => {
+                    this.filteredGoods.push(item);
+                });
+                
                 resolve();
             }).catch((error) => {
                 reject('fetchGoods error');
@@ -56,10 +62,24 @@ class GoodsList {
         });
     }
 
+    filter(searchText, allItems) {
+        if (allItems) { //вывод всех товаров
+            this.filteredGoods = this.goods.map((good) => {
+                return new GoodsItem(good.title, good.price);
+            });
+            
+        } else {
+            const regexp = new RegExp(searchText, 'i');
+            this.filteredGoods = this.goods.filter((good) => {
+                return regexp.test(good.title);
+            });
+        }
+        this.render();
+    }
 
     render() {
         let listHtml = '<div class="goods-list">';
-        this.goods.forEach(good => {
+        this.filteredGoods.forEach(good => {
             listHtml += good.render();
         });
         document.querySelector('.main').innerHTML = listHtml + '</div>';
@@ -73,7 +93,6 @@ class GoodsList {
         }).catch((error) => {
             console.log('fillList error');
         });
-
     }
 
     addEvents() {
@@ -91,9 +110,6 @@ class GoodsList {
         });
     }
 }
-
-
-
 
 
 

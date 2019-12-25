@@ -7,14 +7,19 @@ body {
 
 .header {
     min-height: 40px;
-    padding: 10px 20px;
+    padding: 10px 20px 0 20px;
     background-color: #f2f2f2;
     display: flex;
     justify-content: space-between;
 }
 
 .header .button {
-    width: 120px;
+    width: 180px;
+    margin-bottom: 10px;
+}
+
+.header .menu .button {
+    margin-right: 10px;
 }
 
 .button {
@@ -47,8 +52,10 @@ body {
 
 .main {
     padding: 20px;
-    border-top: solid 2px #333333;;
-    border-bottom: solid 2px #333333;;
+    border-top: solid 2px #333333;
+    ;
+    border-bottom: solid 2px #333333;
+    ;
 }
 
 .goods-list {
@@ -83,4 +90,22 @@ body {
     border-radius: 3px;
     display: inline-block;
     margin: 15px 0;
+}
+
+.header .searchInput {
+    height: 40px;
+    box-sizing: border-box;
+    font-size: 20px;
+}
+
+
+.goods-list-info {
+    font-weight: 700;
+    font-size: 30px;
+    color: #333333;
+}
+
+
+.searchForm {
+    display: inline-block;
 }
