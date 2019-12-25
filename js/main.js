@@ -54,45 +54,150 @@ searchForm.addEventListener('submit', (evt) => {
 });
 */
 
-/*1. Добавить методы и обработчики событий для поля поиска. Создать в объекте данных поле searchLine и привязать к нему содержимое поля ввода. На кнопку «Искать» добавить обработчик клика, вызывающий метод FilterGoods.
-2. Добавить корзину. В html-шаблон добавить разметку корзины. Добавить в объект данных поле isVisibleCart, управляющее видимостью корзины.
-3. *Добавлять в .goods-list заглушку с текстом «Нет данных» в случае, если список товаров пуст.*/
+
+/*
+1. Вынести поиск в отдельный компонент.
+2. Вынести корзину в отдельный компонент.
+3. *Создать компонент с сообщением об ошибке. Компонент должен отображаться, когда не удаётся выполнить запрос к серверу.
+*/
+
+const URL = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
+
+const goodsItem = {
+    name: 'goods-item',
+    props: ['goods', 'good'],
+    template: `<div class="goods-item">
+            <h3 class="goods-item-heading">{{ good.title }}</h3>
+            <img class="item-image" src="img/game.jpg" width="250" height="156" v-bind:alt="good.title">
+            <p class="goods-item-text">Цена: {{ good.price }} рублей</p>
+            <button class="button" v-bind:id="good.title" @click="productButtonClick">Добавить в корзину</button>
+        </div>`,
+    methods: {
+        productButtonClick(ewt) {
+            const thisGood = this.goods.find((good) => {
+                if (ewt.target.id === good.title) {
+                    return good;
+                }
+            });
+            //ТУТ СДЕЛАТЬ ДОБАВЛЕНИЕ В КОРЗИНУ
+            //            this.cartAddItem(thisGood);
+        },
+    }
+}
+
+const goodsList = {
+    name: 'goods-list',
+    props: ['goods', 'filtered-goods', 'visible'],
+    template: `<div class="goods-list" v-if="visible">
+            <goods-item v-for="good in filteredGoods" :filteredGoods="goods" :good="good" :key="good.title"></goods-item>
+            <div class="goods-list-info" v-if="goodsListEmpty">Товаров не найдено.</div>
+        </div>`,
+    computed: {
+        goodsListEmpty() {
+            return this.goods.length === 0;
+        }
+    },
+    components: {
+        goodsItem
+    },
+    methods: {
+
+    }
+};
+
+const search = {
+    template: `<form class="searchForm">
+        <input type="text" class="searchInput form-input" placeholder="" v-model="searchLine" >
+        <button class="button searchButton" @click="buttonSearchClick">Поиск</button>
+     </form>`,
+
+    props: ['goods', 'filtered-goods'],
+    data() {
+        return {
+            searchLine: ''
+        }
+    },
+    methods: {
+        buttonSearchClick(evt) {
+            evt.preventDefault();
+            evt.preventDefault();
+            this.$emit('search-click', this.searchLine);
+        },
+    }
+}
+
+const cartItem = {
+    props: ['good', 'cart'],
+    template: `<div class="cart-item">
+                    <img class="item-image" src="img/game.jpg" width="250" height="156" v-bind:alt="good.title">
+                    <div class="cart-item-info">
+                        <h3 class="goods-item-heading">{{ good.title }}</h3>
+                        <p class="goods-item-text cart-item-price">Цена: {{ good.price }} рублей.</p>
+                        <input v-model="good.quantity" type="number" min="1" max="99" class="cart-item-quantity">
+                    </div>
+                    <svg class="cart-item-cross" viewBox="0 0 52 52" @click="cartCrossClick(good)">
+                        <path d="M26,0C11.664,0,0,11.663,0,26s11.664,26,26,26s26-11.663,26-26S40.336,0,26,0z M26,50C12.767,50,2,39.233,2,26S12.767,2,26,2s24,10.767,24,24S39.233,50,26,50z" />
+                        <path d="M35.707,16.293c-0.391-0.391-1.023-0.391-1.414,0L26,24.586l-8.293-8.293c-0.391-0.391-1.023-0.391-1.414,0s-0.391,1.023,0,1.414L24.586,26l-8.293,8.293c-0.391,0.391-0.391,1.023,0,1.414C16.488,35.902,16.744,36,17,36s0.512-0.098,0.707-0.293L26,27.414l8.293,8.293C34.488,35.902,34.744,36,35,36s0.512-0.098,0.707-0.293c0.391-0.391,0.391-1.023,0-1.414L27.414,26l8.293-8.293C36.098,17.316,36.098,16.684,35.707,16.293z" /></svg>
+                </div>`,
+}
+
+const cart = {
+    name: 'cart',
+    props: ['visible', 'cart'],
+    template: `<div class="cart-wrapper" v-if="visible">
+            <div class="cart-items">
+                <cartItem v-for="good in cart" :cart="cart" :good="good" :key="good.title"></cartItem>
+            </div>
+            <div class="cart-info">
+                <span class="cart-info-text">Всего товаров:</span><span class="cart-info-text cart-info-quantity">{{ cartTotalQuantity }} шт.</span>
+                <span class="cart-info-text">Общая стоимость:</span><span class="cart-info-text cart-info-price">{{ cartTotalPrice }} руб.</span>
+                <button class="button cart-issue-button">Перейти к оформлению</button>
+            </div>
+        </div>`,
+    computed: {
+        cartTotalPrice() {
+            return this.cart.reduce((sum, item) => {
+                if (item.price) {
+                    sum += item.price * item.quantity;
+                }
+                return sum;
+            }, 0);
+        },
+        cartTotalQuantity() {
+            return this.cart.reduce((sum, item) => {
+                if (item.quantity) {
+                    sum += parseInt(item.quantity);
+                }
+                return sum;
+            }, 0);
+        }
+    },
+    components: {
+        cartItem
+    }
+}
 
 const app = new Vue({
     el: '#app',
     data: {
-        url: 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses',
-
         isVisibleGoodsList: true,
         goods: [],
         filteredGoods: [],
         searchLine: '',
-
         isVisibleCart: false,
-        cart: [],
-        
-        fetchError: false,
-        searchNone: false
+        cart: []
     },
     methods: {
         //header
-        buttonIndexClick(evt) {
+        buttonIndexClick() {
             this.isVisibleGoodsList = true;
             this.isVisibleCart = false;
         },
-        buttonCartClick(evt) {
+        buttonCartClick() {
             this.isVisibleGoodsList = false;
             this.isVisibleCart = true;
+            this.cartAddItem(this.goods[0]); //УБРАТЬ
         },
-        buttonSearchClick(evt) {
-            evt.preventDefault();
-            if (this.searchLine === '') {
-                this.filter('', true);
-            } else {
-                this.filter(this.searchLine, false);
-            }
-        },
-
         //goodsList
         makeGetRequest(url) {
             return new Promise((resolve, reject) => {
@@ -116,7 +221,7 @@ const app = new Vue({
             });
         },
         fetchGoods() {
-            let promice = this.makeGetRequest(`${this.url}/catalogData.json`);
+            let promice = this.makeGetRequest(`${URL}/catalogData.json`);
             promice.then((newGoods) => {
                 this.goods = newGoods.map(item => {
                     return new GoodsItem(item.product_name, item.price);
@@ -126,36 +231,8 @@ const app = new Vue({
                 });
             }).catch((error) => {
                 console.log('fetchGoods error');
-                this.fetchError = true;
             });
         },
-        filter(searchText, allItems) {
-            if (allItems) { //вывод всех товаров
-                this.filteredGoods = this.goods.map((good) => {
-                    return new GoodsItem(good.title, good.price);
-                });
-
-            } else {
-                const regexp = new RegExp(searchText, 'i');
-                this.filteredGoods = this.goods.filter((good) => {
-                    return regexp.test(good.title);
-                });
-            }
-            if(this.filteredGoods.length === 0){
-                this.searchNone = true;
-            } else {
-                this.searchNone = false;
-            }
-        },
-        productButtonClick(ewt) {
-            const thisGood = this.goods.find((good) => {
-                if (ewt.target.id === good.title) {
-                    return good;
-                }
-            });
-            this.cartAddItem(thisGood);
-        },
-
         //cart
         cartAddItem(item) {
             let exists = this.cart.find((cartItem) => {
@@ -171,31 +248,24 @@ const app = new Vue({
                 exists.quantity++;
             }
         },
-        cartCrossClick(good) {             
+        cartCrossClick(good) {
             this.cart.splice(this.cart.indexOf(good), 1);
-        }
-
-    },
-    computed: {
-        cartTotalPrice() {
-            return this.cart.reduce((sum, item) => {
-                if (item.price) {
-                    sum += item.price * item.quantity;
-                }
-                return sum;
-            }, 0);
         },
-        cartTotalQuantity() {
-            return this.cart.reduce((sum, item) => {
-                if (item.quantity) {
-                    sum += parseInt(item.quantity);
-                }
-                return sum;
-            }, 0);
-        }
+        filter(searchText) {
+            const regexp = new RegExp(searchText, 'i');
+            this.filteredGoods = this.goods.filter((good) => {
+                return regexp.test(good.title);
+            });
+        },
     },
+
 
     mounted() {
         this.fetchGoods();
+    },
+    components: {
+        goodsList,
+        search,
+        cart
     }
 });
