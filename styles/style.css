@@ -53,9 +53,8 @@ body {
 .main {
     padding: 20px;
     border-top: solid 2px #333333;
-    ;
     border-bottom: solid 2px #333333;
-    ;
+    text-align: center;
 }
 
 .goods-list {
@@ -109,3 +108,4 @@ body {
 .searchForm {
     display: inline-block;
 }
+
