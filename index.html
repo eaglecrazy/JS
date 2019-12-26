@@ -9,10 +9,10 @@
     <link rel="stylesheet" href="styles/cart.css">
     <link rel="stylesheet" href="styles/form.css">
     <script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script defer src="js/goodslist.js"></script>
-    <!--    <script defer src="js/chat.js"></script>-->
-    <script defer src="js/cart.js"></script>
-    <!--    <script defer src="js/form.js"></script>-->
+    <!--<script defer src="js/goodslist.js"></script>-->
+    <!--<script defer src="js/chat.js"></script>-->
+    <!--<script defer src="js/cart.js"></script>-->
+    <!--<script defer src="js/form.js"></script>-->
     <script defer src="js/main.js"></script>
     <title>eShop</title>
 </head>
@@ -25,13 +25,14 @@
                 <button class="button formButton">Обратная связь</button>
             </div>
             <div class="menuRight">
-                <search :filtered-goods='filteredGoods' :goods="goods" v-on:search-click="filter"></search>
+                <search :filtered-goods="filteredGoods" :goods="goods"></search>
                 <button class="button cartButton" @click="buttonCartClick">Корзина</button>
             </div>
         </header>
         <main class="main">
-            <goods-list :visible='isVisibleGoodsList' :filtered-goods='filteredGoods' :goods="goods"></goods-list>
-            <cart :visible='isVisibleCart' :cart="cart"></cart>
+            <goods-list :visible="isVisibleGoodsList" :filtered-goods="filteredGoods" :goods="goods" :cart="cart" :fetch-error="isVisibleFetchError"></goods-list>
+            <cart :visible="isVisibleCart" :cart="cart"></cart>
+            <fetch-error :visible="isVisibleFetchError"></fetch-error>
         </main>
     </div>
 </body></html>

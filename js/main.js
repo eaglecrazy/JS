@@ -61,47 +61,77 @@ searchForm.addEventListener('submit', (evt) => {
 3. *Создать компонент с сообщением об ошибке. Компонент должен отображаться, когда не удаётся выполнить запрос к серверу.
 */
 
+class CartItem {
+    constructor(item) {
+        this.title = item.title;
+        if(!this.title){
+            this.title = item.product_name;
+        }
+        this.price = item.price;
+        this.quantity = 1;
+    }
+}
+class GoodsItem {
+    constructor(title = 'Без имени', price = 0) {
+        this.title = title;
+        this.price = price;
+    }
+}
+
 const URL = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
+
+const fetchError = {
+    name: 'fetch-error',
+    props: ['visible'],
+    template : `<div v-if="visible" class="goods-list-info">Не удалось получить список товаров с сервера.</div>`
+}
 
 const goodsItem = {
     name: 'goods-item',
-    props: ['goods', 'good'],
+    props: ['goods', 'good', 'cart'],
     template: `<div class="goods-item">
             <h3 class="goods-item-heading">{{ good.title }}</h3>
             <img class="item-image" src="img/game.jpg" width="250" height="156" v-bind:alt="good.title">
             <p class="goods-item-text">Цена: {{ good.price }} рублей</p>
-            <button class="button" v-bind:id="good.title" @click="productButtonClick">Добавить в корзину</button>
+            <button class="button" v-bind:id="good.title" @click="addItemToCart(good)">Добавить в корзину</button>
         </div>`,
     methods: {
-        productButtonClick(ewt) {
-            const thisGood = this.goods.find((good) => {
-                if (ewt.target.id === good.title) {
-                    return good;
+        addItemToCart(item) {
+            let exists = this.cart.find((cartItem) => {
+                if (cartItem.title === item.title) {
+                    return cartItem;
                 }
             });
-            //ТУТ СДЕЛАТЬ ДОБАВЛЕНИЕ В КОРЗИНУ
-            //            this.cartAddItem(thisGood);
+
+            if (!exists) {
+                let newItem = new CartItem(item);
+                this.cart.push(newItem);
+            } else {
+                exists.quantity++;
+            }
         },
     }
 }
 
 const goodsList = {
     name: 'goods-list',
-    props: ['goods', 'filtered-goods', 'visible'],
+    props: ['goods', 'filteredGoods', 'cart', 'visible', 'fetch-error'],
+    //Тут тоже со свойствами непонятно. В index.html написано ":fetch-error="isVisibleFetchError", в компоненте свойство тоже называется 'fetch-error', а в отладчике оно вообще fetchError называется. Почему так?
+    
     template: `<div class="goods-list" v-if="visible">
-            <goods-item v-for="good in filteredGoods" :filteredGoods="goods" :good="good" :key="good.title"></goods-item>
+            <goods-item v-for="good in filteredGoods" :goods="filteredGoods" :good="good" :cart="cart" :key="good.title"></goods-item>
             <div class="goods-list-info" v-if="goodsListEmpty">Товаров не найдено.</div>
         </div>`,
     computed: {
         goodsListEmpty() {
-            return this.goods.length === 0;
+            if(this.fetchError){
+                return false;
+            }
+            return this.filteredGoods.length === 0;
         }
     },
     components: {
         goodsItem
-    },
-    methods: {
-
     }
 };
 
@@ -111,7 +141,7 @@ const search = {
         <button class="button searchButton" @click="buttonSearchClick">Поиск</button>
      </form>`,
 
-    props: ['goods', 'filtered-goods'],
+    props: ['goods', 'filtered-goods'],//Я не понимаю, почему тут не важно как назвать свойство "filtered-goods" или "filteredGoods", всё работает и так и так. Объясните, пожалуйста этот момент.
     data() {
         return {
             searchLine: ''
@@ -120,8 +150,13 @@ const search = {
     methods: {
         buttonSearchClick(evt) {
             evt.preventDefault();
-            evt.preventDefault();
-            this.$emit('search-click', this.searchLine);
+            const regexp = new RegExp(this.searchLine, 'i');
+            this.filteredGoods.splice(0, this.filteredGoods.length);
+            this.goods.forEach((currentItem) => {
+                if (regexp.test(currentItem.title)) {
+                    this.filteredGoods.push(currentItem);
+                }
+            });
         },
     }
 }
@@ -139,6 +174,11 @@ const cartItem = {
                         <path d="M26,0C11.664,0,0,11.663,0,26s11.664,26,26,26s26-11.663,26-26S40.336,0,26,0z M26,50C12.767,50,2,39.233,2,26S12.767,2,26,2s24,10.767,24,24S39.233,50,26,50z" />
                         <path d="M35.707,16.293c-0.391-0.391-1.023-0.391-1.414,0L26,24.586l-8.293-8.293c-0.391-0.391-1.023-0.391-1.414,0s-0.391,1.023,0,1.414L24.586,26l-8.293,8.293c-0.391,0.391-0.391,1.023,0,1.414C16.488,35.902,16.744,36,17,36s0.512-0.098,0.707-0.293L26,27.414l8.293,8.293C34.488,35.902,34.744,36,35,36s0.512-0.098,0.707-0.293c0.391-0.391,0.391-1.023,0-1.414L27.414,26l8.293-8.293C36.098,17.316,36.098,16.684,35.707,16.293z" /></svg>
                 </div>`,
+    methods: {
+        cartCrossClick(good) {
+            this.cart.splice(this.cart.indexOf(good), 1);
+        },
+    }
 }
 
 const cart = {
@@ -183,9 +223,9 @@ const app = new Vue({
         isVisibleGoodsList: true,
         goods: [],
         filteredGoods: [],
-        searchLine: '',
         isVisibleCart: false,
-        cart: []
+        cart: [],
+        isVisibleFetchError: false
     },
     methods: {
         //header
@@ -196,7 +236,6 @@ const app = new Vue({
         buttonCartClick() {
             this.isVisibleGoodsList = false;
             this.isVisibleCart = true;
-            this.cartAddItem(this.goods[0]); //УБРАТЬ
         },
         //goodsList
         makeGetRequest(url) {
@@ -231,41 +270,17 @@ const app = new Vue({
                 });
             }).catch((error) => {
                 console.log('fetchGoods error');
-            });
-        },
-        //cart
-        cartAddItem(item) {
-            let exists = this.cart.find((cartItem) => {
-                if (cartItem.title === item.title) {
-                    return cartItem;
-                }
-            });
-
-            if (!exists) {
-                let newItem = new CartItem(item);
-                this.cart.push(newItem);
-            } else {
-                exists.quantity++;
-            }
-        },
-        cartCrossClick(good) {
-            this.cart.splice(this.cart.indexOf(good), 1);
-        },
-        filter(searchText) {
-            const regexp = new RegExp(searchText, 'i');
-            this.filteredGoods = this.goods.filter((good) => {
-                return regexp.test(good.title);
+                this.isVisibleFetchError = true;
             });
         },
     },
-
-
     mounted() {
         this.fetchGoods();
     },
     components: {
         goodsList,
         search,
-        cart
+        cart,
+        fetchError
     }
 });
