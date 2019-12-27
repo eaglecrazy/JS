@@ -5,6 +5,9 @@ body {
     font-family: "Arial MT", sans-serif;
 }
 
+#app{
+    min-width: 1000px;
+}
 .header {
     min-height: 40px;
     padding: 10px 20px 0 20px;

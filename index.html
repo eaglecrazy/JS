@@ -23,6 +23,7 @@
             <div class="menuLeft">
                 <button class="button indexButton" @click="buttonIndexClick">Магазин</button>
                 <button class="button formButton">Обратная связь</button>
+                <button class="button" @click="post">POST</button>
             </div>
             <div class="menuRight">
                 <search :filtered-goods="filteredGoods" :goods="goods"></search>
@@ -37,3 +38,9 @@
         <chat :visible="chatVisibility"></chat>
     </div>
 </body></html>
+
+
+
+
+
+
