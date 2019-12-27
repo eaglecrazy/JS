@@ -340,10 +340,9 @@ const app = new Vue({
                     xhr = new window.ActiveXObject('Microsoft.XMLHTTP');
                 }
                 xhr.onreadystatechange = function () {
-                    
                     if (xhr.readyState === 4) {
                         if (xhr.status === 200) {
-                            console.log('Request successful');
+                            resolve();
                         } else {
                             reject('Error');
                         }
@@ -351,7 +350,6 @@ const app = new Vue({
                 }
                 xhr.open('POST', url);
                 xhr.setRequestHeader('Content-Type', 'application/json', 'charset=UTF-8');
-                console.log('Sending POST');
                 xhr.send(data);
             });
         },

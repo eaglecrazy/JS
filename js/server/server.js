@@ -32,7 +32,6 @@ app.get('/catalog', (req, res) => {
 const cartFileName = 'data/cart.json';
 
 app.post('/cart', (req, res) => {
-
     const item = req.body;
     let cart = [];
     if (fs.existsSync(cartFileName)) {
@@ -45,13 +44,11 @@ app.post('/cart', (req, res) => {
     }
     cart.push(item); //тут нужно добавлять уникальные значения
 
-    console.log('будем добавлять в файл');
-    console.log(cart);
-
-    fs.writeFileSync(cartFileName, JSON.stringify(cart), (err) => {
-        if (err) {
-            res.sendStatus(500);
-        }
+    try {
+        fs.writeFileSync(cartFileName, JSON.stringify(cart));
         res.sendStatus(200);
-    });
+
+    } catch {
+        res.sendStatus(500);
+    }
 });
