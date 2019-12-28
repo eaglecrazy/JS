@@ -61,6 +61,8 @@ searchForm.addEventListener('submit', (evt) => {
 3. *Создать компонент с сообщением об ошибке. Компонент должен отображаться, когда не удаётся выполнить запрос к серверу.
 */
 
+var number = 1;
+
 class CartItem {
     constructor(item) {
         this.title = item.title;
@@ -88,39 +90,28 @@ const fetchError = {
 
 const goodsItem = {
     name: 'goods-item',
-    props: ['goods', 'good', 'cart'],
+    props: ['good'],
     template: `<div class="goods-item">
             <h3 class="goods-item-heading">{{ good.title }}</h3>
             <img class="item-image" src="img/game.jpg" width="250" height="156" v-bind:alt="good.title">
             <p class="goods-item-text">Цена: {{ good.price }} рублей</p>
-            <button class="button" v-bind:id="good.title" @click="addItemToCart(good)">Добавить в корзину</button>
+            <button class="button" v-bind:id="good.title" @click="addItemToCart">Добавить в корзину</button>
         </div>`,
     methods: {
         addItemToCart(item) {
-            let exists = this.cart.find((cartItem) => {
-                if (cartItem.title === item.title) {
-                    return cartItem;
-                }
-            });
-
-            if (!exists) {
-                let newItem = new CartItem(item);
-                this.cart.push(newItem);
-            } else {
-                exists.quantity++;
-            }
-        },
+            this.$emit('add-item-to-cart', this.item);
+        }
     }
 }
 
 const goodsList = {
     name: 'goods-list',
-    props: ['goods', 'filteredGoods', 'cart', 'visible', 'fetch-error'],
+    props: ['goods', 'filteredGoods', 'visible', 'fetch-error'],
 
     template: `<div class="goods-list" v-if="visible">
-            <goods-item v-for="good in filteredGoods" :goods="filteredGoods" :good="good" :cart="cart" :key="good.title"></goods-item>
-            <div class="goods-list-info" v-if="goodsListEmpty">Товаров не найдено.</div>
-        </div>`,
+                    <goods-item v-for="good in filteredGoods" :good="good" :key="good.title" @add-item-to-cart="addItemToCart(good)"></goods-item>
+                    <div class="goods-list-info" v-if="goodsListEmpty">Товаров не найдено.</div>
+                </div>`,
     computed: {
         goodsListEmpty() {
             if (this.fetchError) {
@@ -131,7 +122,13 @@ const goodsList = {
     },
     components: {
         goodsItem
+    },
+    methods: {
+        addItemToCart(good) {
+            this.$emit('add-item-to-cart', good);
+        }
     }
+
 };
 
 const search = {
@@ -252,6 +249,7 @@ const chatForm = {
             <textarea name="" id="" class="chatInput" placeholder="Введите сообщение и нажимте Enter"></textarea>
 	   </form>`
 }
+
 const chat = {
     name: 'chat',
     props: ['visible'],
@@ -282,8 +280,8 @@ const app = new Vue({
         isVisibleCart: false,
         cart: [],
         isVisibleFetchError: false,
-        chatVisibility: true
-        //        chatVisibility: false
+//        chatVisibility: true
+        chatVisibility: false
     },
     methods: {
         //header
@@ -331,6 +329,15 @@ const app = new Vue({
                 this.isVisibleFetchError = true;
             });
         },
+        
+        
+        
+        
+        
+        
+        
+        
+        
         makePostRequest(url, data) {
             return new Promise((resolve, reject) => {
                 let xhr;
@@ -350,11 +357,32 @@ const app = new Vue({
                 }
                 xhr.open('POST', url);
                 xhr.setRequestHeader('Content-Type', 'application/json', 'charset=UTF-8');
-                xhr.send(data);
+//                xhr.send('{ "product_name": "Кресло", "price": "160" }');
+                xhr.send(JSON.stringify(data));
             });
+            
+            
+            
+            
+            
+            
+            
         },
-        post() {
-            let promice = this.makePostRequest(`/cart`, `{ "product_name": "Кресло", "price": "160"}`);
+//        post() {
+//            let promice = this.makePostRequest(`/cart`, `{ "product_name": "Кресло", "price": "160" }`);
+//            promice.then(() => {
+//                console.log('FRONT POST OK');
+//            }).catch((error) => {
+//                console.log('FRONT POST ERROR');
+//            });
+//        },
+        addItemToCart(good) {
+
+//            good.title = number;
+//            console.log('отправляем ' + number++);
+//            console.log(good);
+
+            let promice = this.makePostRequest(`/cart`, good);
             promice.then(() => {
                 console.log('FRONT POST OK');
             }).catch((error) => {
