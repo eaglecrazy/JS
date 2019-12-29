@@ -60,8 +60,8 @@ searchForm.addEventListener('submit', (evt) => {
 2. Вынести корзину в отдельный компонент.
 3. *Создать компонент с сообщением об ошибке. Компонент должен отображаться, когда не удаётся выполнить запрос к серверу.
 */
+//const URL = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
 
-var number = 1;
 
 class CartItem {
     constructor(item) {
@@ -73,14 +73,13 @@ class CartItem {
         this.quantity = 1;
     }
 }
+
 class GoodsItem {
     constructor(title = 'Без имени', price = 0) {
         this.title = title;
         this.price = price;
     }
 }
-
-//const URL = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses';
 
 const fetchError = {
     name: 'fetch-error',
@@ -98,7 +97,7 @@ const goodsItem = {
             <button class="button" v-bind:id="good.title" @click="addItemToCart">Добавить в корзину</button>
         </div>`,
     methods: {
-        addItemToCart(item) {
+        addItemToCart() {
             this.$emit('add-item-to-cart', this.item);
         }
     }
@@ -172,7 +171,7 @@ const cartItem = {
                 </div>`,
     methods: {
         cartCrossClick(good) {
-            this.cart.splice(this.cart.indexOf(good), 1);
+            this.$emit('remove-item-from-cart', good);
         },
     }
 }
@@ -182,7 +181,7 @@ const cart = {
     props: ['visible', 'cart'],
     template: `<div class="cart-wrapper" v-if="visible">
             <div class="cart-items">
-                <cartItem v-for="good in cart" :cart="cart" :good="good" :key="good.title"></cartItem>
+                <cartItem v-for="good in cart" :cart="cart" :good="good" :key="good.title" @remove-item-from-cart="removeItemFromCart(good)"></cartItem>
             </div>
             <div class="cart-info">
                 <span class="cart-info-text">Всего товаров:</span><span class="cart-info-text cart-info-quantity">{{ cartTotalQuantity }} шт.</span>
@@ -210,6 +209,11 @@ const cart = {
     },
     components: {
         cartItem
+    },
+    methods: {
+        removeItemFromCart(cartItem) {
+            this.$emit('remove-item-from-cart', cartItem);
+        }
     }
 }
 
@@ -280,16 +284,16 @@ const app = new Vue({
         isVisibleCart: false,
         cart: [],
         isVisibleFetchError: false,
-//        chatVisibility: true
+        //        chatVisibility: true
         chatVisibility: false
     },
     methods: {
-        //header
         buttonIndexClick() {
             this.isVisibleGoodsList = true;
             this.isVisibleCart = false;
         },
         buttonCartClick() {
+            this.fetchCart();
             this.isVisibleGoodsList = false;
             this.isVisibleCart = true;
         },
@@ -304,6 +308,9 @@ const app = new Vue({
                 xhr.onreadystatechange = function () {
                     if (xhr.readyState === 4) {
                         if (xhr.status === 200) {
+                            if (xhr.responseText == '[]') {
+                                resolve([]);
+                            }
                             resolve(JSON.parse(xhr.responseText));
                         } else {
                             reject('Error')
@@ -312,6 +319,17 @@ const app = new Vue({
                 }
                 xhr.open('GET', url);
                 xhr.send();
+            });
+        },
+        fetchCart() {
+            let promice = this.makeGetRequest(`/cart`);
+            promice.then((newCart) => {
+                this.newCart = newCart.map(item => {
+                    return new CartItem(item.title, item.price, item.quantity);
+                });
+                this.cart = newCart;
+            }).catch((error) => {
+                console.log('fetchCart error');
             });
         },
         fetchGoods() {
@@ -329,15 +347,6 @@ const app = new Vue({
                 this.isVisibleFetchError = true;
             });
         },
-        
-        
-        
-        
-        
-        
-        
-        
-        
         makePostRequest(url, data) {
             return new Promise((resolve, reject) => {
                 let xhr;
@@ -357,37 +366,30 @@ const app = new Vue({
                 }
                 xhr.open('POST', url);
                 xhr.setRequestHeader('Content-Type', 'application/json', 'charset=UTF-8');
-//                xhr.send('{ "product_name": "Кресло", "price": "160" }');
+                //                xhr.send('{ "product_name": "Кресло", "price": "160" }');
                 xhr.send(JSON.stringify(data));
             });
-            
-            
-            
-            
-            
-            
-            
         },
-//        post() {
-//            let promice = this.makePostRequest(`/cart`, `{ "product_name": "Кресло", "price": "160" }`);
-//            promice.then(() => {
-//                console.log('FRONT POST OK');
-//            }).catch((error) => {
-//                console.log('FRONT POST ERROR');
-//            });
-//        },
         addItemToCart(good) {
-
-//            good.title = number;
-//            console.log('отправляем ' + number++);
-//            console.log(good);
-
-            let promice = this.makePostRequest(`/cart`, good);
+            const promice = this.makePostRequest(`/cart`, good);
             promice.then(() => {
                 console.log('FRONT POST OK');
             }).catch((error) => {
                 console.log('FRONT POST ERROR');
             });
+        },
+        removeItemFromCart(cartItem) {
+            console.log('removeItemFromCart');
+            console.log(cartItem);
+
+            const promice = this.makePostRequest(`/cart-change`, cartItem);
+            promice.then(() => {
+                console.log('FRONT POST OK');
+            }).catch((error) => {
+                console.log('FRONT POST ERROR');
+            });
+            
+//            this.cart.splice(this.cart.indexOf(cartItem), 1);
         }
     },
     mounted() {

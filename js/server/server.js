@@ -5,7 +5,7 @@
 class CartItem {
     constructor(item) {
         this.title = item.title;
-        if(!this.title){
+        if (!this.title) {
             this.title = item.product_name;
         }
         this.price = item.price;
@@ -18,7 +18,7 @@ const cartFileName = 'data/cart.json';
 const cart = {
     addItem(item) {
         let cart = [];
-        
+
         if (fs.existsSync(cartFileName)) {
             try {
                 let data = fs.readFileSync(cartFileName, 'utf-8');
@@ -27,7 +27,7 @@ const cart = {
                 return 500;
             }
         }
-                
+
         let exists = cart.find((cartItem) => {
             if (cartItem.title === item.title) {
                 return cartItem;
@@ -41,10 +41,8 @@ const cart = {
             exists.quantity++;
         }
 
-        cartString = JSON.stringify(cart); 
-
         try {
-            fs.writeFileSync(cartFileName, cartString);
+            fs.writeFileSync(cartFileName, JSON.stringify(cart));
             return 200;
 
         } catch {
@@ -89,7 +87,7 @@ app.listen(PORT, () => {
 
 
 app.get('/catalog', (req, res) => {
-    console.log('GET request')
+    console.log('GET request /catalog')
     fs.readFile('data/catalog.json', 'utf-8', (err, data) => {
         if (err) {
             res.sendStatus(404);
@@ -100,54 +98,35 @@ app.get('/catalog', (req, res) => {
 
 
 
-app.post('/cart', (req, res) => {
-    console.log('POST requеst');
-    const item = req.body;
-    res.sendStatus(cart.addItem(item));
+app.get('/cart', (req, res) => {
+    console.log('GET request /cart');
 
-    
-    
+    let cart = [];
 
-    //    let cart = [];
-    //    if (fs.existsSync(cartFileName)) {
-    //        try {
-    //            data = fs.readFileSync(cartFileName, 'utf-8');
-    //            cart = JSON.parse(data);
-    //        } catch {
-    //            res.sendStatus(500);
-    //        }
-    //    }
-    //    cart.push(item); //тут нужно добавлять уникальные значения
-    //
-    //    console.log('корзина:');
-    //    console.log(cart);
-    //
-    //    try {
-    //        fs.writeFileSync(cartFileName, JSON.stringify(cart));
-    //        res.sendStatus(200);
-    //
-    //    } catch {
-    //        res.sendStatus(500);
-    //    }
+    if (fs.existsSync(cartFileName)) {
+        try {
+            let data = fs.readFileSync(cartFileName, 'utf-8');
+            cart = JSON.parse(data);
+        } catch {
+            return 500;
+        }
+    }
+    console.log('cart = ');
+    console.log(cart);
+    res.send(cart);
 });
 
 
 
+app.post('/cart', (req, res) => {
+    const item = req.body;
+    console.log('POST requеst ' + item.title);
+    res.sendStatus(cart.addItem(item));
+});
 
 
-
-
-//addItemToCart(item) {
-//    let exists = this.cart.find((cartItem) => {
-//        if (cartItem.title === item.title) {
-//            return cartItem;
-//        }
-//    });
-//
-//    if (!exists) {
-//        let newItem = new CartItem(item);
-//        this.cart.push(newItem);
-//    } else {
-//        exists.quantity++;
-//    }
-//},
+app.post('/cart-change', (req, res) => {
+    const item = req.body;
+    console.log('POST requеst ' + item.title);
+    res.sendStatus(200);
+});

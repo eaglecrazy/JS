@@ -33,7 +33,7 @@
         <main class="main">
             <goods-list :visible="isVisibleGoodsList" :filtered-goods="filteredGoods" :goods="goods" :fetch-error="isVisibleFetchError" @add-item-to-cart="addItemToCart"></goods-list>
 <!--            <goods-list :visible="isVisibleGoodsList" :filtered-goods="filteredGoods" :goods="goods" :fetch-error="isVisibleFetchError" @add-item-to-cart="post"></goods-list>-->
-            <cart :visible="isVisibleCart" :cart="cart"></cart>
+            <cart :visible="isVisibleCart" :cart="cart" @remove-item-from-cart="removeItemFromCart"></cart>
             <fetch-error :visible="isVisibleFetchError"></fetch-error>
         </main>
         <chat :visible="chatVisibility"></chat>
