@@ -9,11 +9,8 @@
     <link rel="stylesheet" href="styles/cart.css">
     <link rel="stylesheet" href="styles/form.css">
     <script defer src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <!--<script defer src="js/goodslist.js"></script>-->
-    <!--<script defer src="js/chat.js"></script>-->
-    <!--<script defer src="js/cart.js"></script>-->
-    <!--<script defer src="js/form.js"></script>-->
-    <script defer src="js/main.js"></script>
+    <script defer src="js/dist/build.js"></script>
+<!--    <script defer src="js/main.js"></script>-->
     <title>eShop</title>
 </head>
 
@@ -23,7 +20,6 @@
             <div class="menuLeft">
                 <button class="button indexButton" @click="buttonIndexClick">Магазин</button>
                 <button class="button formButton">Обратная связь</button>
-<!--                <button class="button" @click="post">POST</button>-->
             </div>
             <div class="menuRight">
                 <search :filtered-goods="filteredGoods" :goods="goods"></search>
@@ -32,7 +28,6 @@
         </header>
         <main class="main">
             <goods-list :visible="isVisibleGoodsList" :filtered-goods="filteredGoods" :goods="goods" :fetch-error="isVisibleFetchError" @add-item-to-cart="addItemToCart"></goods-list>
-<!--            <goods-list :visible="isVisibleGoodsList" :filtered-goods="filteredGoods" :goods="goods" :fetch-error="isVisibleFetchError" @add-item-to-cart="post"></goods-list>-->
             <cart :visible="isVisibleCart" :cart="cart" @remove-item-from-cart="removeItemFromCart" @change-item-in-cart="changeItemInCart"></cart>
             <fetch-error :visible="isVisibleFetchError"></fetch-error>
         </main>
